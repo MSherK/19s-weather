@@ -1,132 +1,503 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Weather Dispatch</title>
-</head>
-<body>
-  <script>
-    (async function preserveOriginalPageAndAddCitySearch() {
-      const originalUrl = 'https://raw.githubusercontent.com/MSherK/19s-weather/206180f7125202d53d8c37513ad631076ac1355d/index.html';
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary-container":"#68645f","on-surface":"#1d1c16","surface-container-highest":"#e7e2d9","secondary-fixed":"#e8e1db","surface-container":"#f2ede4","tertiary-fixed-dim":"#cbc6bc","surface-bright":"#fef9f0","primary":"#000000","on-primary":"#ffffff","inverse-surface":"#32302a","primary-container":"#1d1b1a","secondary-fixed-dim":"#cbc5c0","background":"#fef9f0","surface-tint":"#605e5c","on-secondary-fixed":"#1d1b18","secondary":"#615e59","on-primary-fixed":"#1d1b1a","surface-container-lowest":"#ffffff","outline":"#7c766f","on-error-container":"#93000a","error-container":"#ffdad6","tertiary-container":"#1e1b15","on-tertiary":"#ffffff","surface-variant":"#e7e2d9","on-surface-variant":"#4b4640","on-secondary":"#ffffff","surface-container-high":"#ece8df","surface":"#fef9f0","inverse-on-surface":"#f5f0e7","inverse-primary":"#cac6c3","surface-container-low":"#f8f3ea","on-secondary-fixed-variant":"#494642","error":"#ba1a1a","on-background":"#1d1c16","surface-dim":"#ded9d1","primary-fixed":"#e6e1df","on-primary-fixed-variant":"#484645","tertiary":"#000000","outline-variant":"#cdc5bd","primary-fixed-dim":"#cac6c3","on-error":"#ffffff","secondary-container":"#e8e1db","on-tertiary-fixed-variant":"#4a463f","on-tertiary-container":"#88837b","on-tertiary-fixed":"#1e1b15","tertiary-fixed":"#e8e2d8","on-primary-container":"#868381"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin":"1rem","space-xs":"0.25rem","margin-tablet":"2rem","space-sm":"0.5rem","space-xl":"2.5rem","gutter-desktop":"1.5rem","space-lg":"1.5rem","space-md":"1rem","margin-desktop":"3rem","gutter":"1rem"},"fontFamily":{"headline-md":["Bricolage Grotesque"],"display-lg":["Bricolage Grotesque"],"label-md":["Courier Prime"],"body-md":["Newsreader"],"body-lg":["Newsreader"],"headline-lg":["Bricolage Grotesque"],"label-lg":["Courier Prime"],"body-sm":["Newsreader"],"label-sm":["Courier Prime"],"headline-sm":["Bricolage Grotesque"],"title-md":["Newsreader"],"display-lg-mobile":["Bricolage Grotesque"]},"fontSize":{"headline-md":["24px",{"lineHeight":"30px","fontWeight":"700"}],"display-lg":["56px",{"lineHeight":"60px","letterSpacing":"-0.02em","fontWeight":"800"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"400"}],"body-md":["15px",{"lineHeight":"22px","fontWeight":"400"}],"body-lg":["17px",{"lineHeight":"26px","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"38px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-lg":["14px",{"lineHeight":"18px","letterSpacing":"0.05em","fontWeight":"700"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"26px","fontWeight":"600"}],"title-md":["18px",{"lineHeight":"24px","fontWeight":"600"}],"display-lg-mobile":["38px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"800"}]}}}};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary"><main class="w-full bg-surface"><div class="flex flex-col w-full">
+<div class="max-w-7xl mx-auto w-full px-margin py-space-lg flex flex-col gap-space-xl">
+<!-- SEARCH & TELEGRAPH DISPATCH BAR -->
+<div class="bg-surface-container-lowest border-2 border-primary rounded-xl p-space-lg shadow-[4px_4px_0_0_#000000] relative"><div class="flex flex-col md:flex-row items-center gap-space-lg"><div class="flex flex-col items-center shrink-0"><div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full border-2 border-primary overflow-hidden shadow-[2px_2px_0_0_#000000] bg-surface-container-low flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida/ALJJyrAHDSDOovMwPjYxRApes2aHmgLffYI3YzTfe6u_slH8X5FDtbuBoAQ0JLbb85mVDt8WrQIAHVJeJh6-TemXh9c2BtZ-BDVpX6oMtoeiq4uymfJpidtEeUy5MoQ0iUKeaSL5iiT0gzgbKt7lcQ1f8rHVsjcXl0i7Z6SSYjWzAlG35MRyPyevV7LASmYUvnKpk1-wE48CdvhEgUEQvxPBlCFGwUyC7ZIuTf_fRbniYP8" alt="Zephyr Cartoon Cloud Mascot" class="w-full h-full object-cover"></div><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold mt-1 text-center">Zephyr the Cloud</span></div><div class="flex-1 w-full flex flex-col gap-space-sm"><div class="flex flex-wrap items-center justify-between gap-space-xs"><div class="inline-flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-high border border-primary rounded font-label-sm text-label-sm uppercase tracking-widest font-bold text-on-surface"><span class="material-symbols-outlined text-sm">campaign</span><span>Atmospheric Telegraph Dispatch</span></div><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Direct pneumatic wire: WIRE-BAROMETER-09</span></div><h3 class="font-headline-sm text-headline-sm uppercase text-on-surface font-extrabold leading-tight">"Inquire of the Atmospheric Conditions &amp; Gale Forewarnings!"</h3><p class="font-body-sm text-body-sm text-on-surface-variant italic">Summon current barometric readings, squalls, and celestial funnies for any township, port, or continental station.</p><div class="flex flex-col sm:flex-row items-stretch gap-2 mt-1"><div class="relative flex-1 flex items-center bg-surface border-2 border-primary shadow-[2px_2px_0_0_#000000] rounded"><span class="material-symbols-outlined text-primary pl-space-sm text-lg select-none">explore</span><input id="city-search" class="w-full bg-transparent px-space-sm py-2 font-label-md text-label-md text-on-surface placeholder:text-on-surface-variant focus:outline-none" placeholder="Inquire City, Port or Township..." type="text" value="Old Chicago, Illinois" autocomplete="off" role="combobox" aria-expanded="false"><div id="city-dropdown" role="listbox" class="hidden absolute left-[-2px] right-[-2px] top-full mt-1 z-50 bg-surface-container-lowest border-2 border-primary rounded shadow-[4px_4px_0_0_#000000] overflow-hidden"></div></div><button id="dispatch-btn" class="bg-primary text-on-primary px-space-lg py-2 rounded font-label-md text-label-md font-bold uppercase tracking-wider shadow-[2px_2px_0_0_#000000] hover:bg-surface-container-highest hover:text-on-surface transition-colors flex items-center justify-center gap-1.5 shrink-0"><span>INQUIRE</span><span class="material-symbols-outlined text-sm">send</span></button></div><div class="flex items-center gap-space-xs flex-wrap pt-1"><span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider font-bold mr-space-xs">Quick Wires:</span><button class="city-pill px-space-sm py-0.5 bg-primary text-on-primary font-label-sm text-label-sm rounded uppercase border border-primary shadow-sm whitespace-nowrap">Chicago</button><button class="city-pill px-space-sm py-0.5 bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-sm text-label-sm rounded uppercase border border-primary/40 transition-colors whitespace-nowrap">New York</button><button class="city-pill px-space-sm py-0.5 bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-sm text-label-sm rounded uppercase border border-primary/40 transition-colors whitespace-nowrap">London</button><button class="city-pill px-space-sm py-0.5 bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-sm text-label-sm rounded uppercase border border-primary/40 transition-colors whitespace-nowrap">San Francisco</button><button class="city-pill px-space-sm py-0.5 bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-sm text-label-sm rounded uppercase border border-primary/40 transition-colors whitespace-nowrap">Paris</button></div></div></div></div>
+<!-- MAIN WEATHER HERO SHOWCASE -->
+
+<!-- 5-DAY SUNDAY COMIC STRIP FORECAST -->
+<div class="flex flex-col gap-space-sm py-space-lg">
+<div class="flex flex-wrap items-center justify-between gap-space-xs px-1">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Serialized Daily Ephemera</span>
+<h2 class="font-headline-lg text-headline-lg uppercase text-on-surface">The 5-Panel Sunday Weather Funnies</h2>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">
+          Drawn by Linotype Syndicate • Plate No. 582
+        </div>
+</div>
+<!-- The 5 Strip Panels -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-gutter">
+<!-- Panel 1: Monday -->
+<div class="comic-panel bg-surface-container-low rounded-xl p-space-md shadow-md flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface">Mon • Oct 14</span>
+<span class="font-label-sm text-label-sm uppercase bg-surface-container-highest text-on-surface px-1.5 py-0.5 rounded">Panel 1</span>
+</div>
+<!-- Rubber Hose Smiling Sun Cel -->
+<div class="my-space-md flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center shadow-inner relative group-hover:scale-105 transition-transform">
+<svg class="w-20 h-20 text-on-surface fill-current" viewBox="0 0 100 100">
+<!-- Sun Rays Rubber Hose style -->
+<circle cx="50" cy="50" fill="currentColor" fill-opacity="0.08" r="28" stroke="currentColor" stroke-width="4"></circle>
+<!-- Pie-Cut Eyes -->
+<ellipse cx="42" cy="45" fill="currentColor" rx="4" ry="7"></ellipse>
+<polygon fill="#fef9f0" points="42,42 46,45 42,48"></polygon>
+<ellipse cx="58" cy="45" fill="currentColor" rx="4" ry="7"></ellipse>
+<polygon fill="#fef9f0" points="58,42 62,45 58,48"></polygon>
+<!-- Broad Rubber Hose Grin -->
+<path d="M 38 58 Q 50 72 62 58" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3.5"></path>
+<!-- Cheeks -->
+<circle cx="34" cy="56" fill="none" r="3" stroke="currentColor" stroke-width="1.5"></circle>
+<circle cx="66" cy="56" fill="none" r="3" stroke="currentColor" stroke-width="1.5"></circle>
+<!-- External Curved Sunbeams -->
+<path d="M 50 12 L 50 2 M 50 88 L 50 98 M 12 50 L 2 50 M 88 50 L 98 50 M 23 23 L 15 15 M 77 77 L 85 85 M 77 23 L 85 15 M 23 77 L 15 85" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+</svg>
+</div>
+<div class="font-headline-sm text-headline-sm font-extrabold text-on-surface mt-space-sm">70° / 52°</div>
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface mt-0.5">Radiant Sunshine</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs text-center font-body-sm text-body-sm text-on-surface-variant italic">
+            "Old Sol dons his Sunday bowler and shines all daylight!"
+          </div>
+</div>
+<!-- Panel 2: Tuesday -->
+<div class="comic-panel bg-surface-container-low rounded-xl p-space-md shadow-md flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface">Tue • Oct 15</span>
+<span class="font-label-sm text-label-sm uppercase bg-surface-container-highest text-on-surface px-1.5 py-0.5 rounded">Panel 2</span>
+</div>
+<!-- Rubber Hose Raindrop with Umbrella -->
+<div class="my-space-md flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center shadow-inner relative group-hover:scale-105 transition-transform">
+<svg class="w-20 h-20 text-on-surface fill-current" viewBox="0 0 100 100">
+<!-- Umbrella Canopy -->
+<path d="M 25 40 Q 50 18 75 40 Z" fill="currentColor"></path>
+<path d="M 50 40 L 50 64 Q 50 72 42 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+<!-- Dancing Droplet with Galoshes -->
+<path d="M 58 52 C 58 46 64 36 64 36 C 64 36 70 46 70 52 C 70 56 67 60 64 60 C 61 60 58 56 58 52 Z" fill="currentColor"></path>
+<!-- Pie-eyes on droplet -->
+<circle cx="62" cy="50" fill="#fef9f0" r="1.5"></circle>
+<circle cx="66" cy="50" fill="#fef9f0" r="1.5"></circle>
+<!-- Rain splash hatching -->
+<line stroke="currentColor" stroke-width="2" x1="20" x2="28" y1="75" y2="70"></line>
+<line stroke="currentColor" stroke-width="2" x1="72" x2="80" y1="75" y2="70"></line>
+</svg>
+</div>
+<div class="font-headline-sm text-headline-sm font-extrabold text-on-surface mt-space-sm">59° / 48°</div>
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface mt-0.5">Misty Drizzle</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs text-center font-body-sm text-body-sm text-on-surface-variant italic">
+            "Slickers required! Droplets tapping out ragtime melodies."
+          </div>
+</div>
+<!-- Panel 3: Wednesday -->
+<div class="comic-panel bg-surface-container-low rounded-xl p-space-md shadow-md flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface">Wed • Oct 16</span>
+<span class="font-label-sm text-label-sm uppercase bg-surface-container-highest text-on-surface px-1.5 py-0.5 rounded">Panel 3</span>
+</div>
+<!-- Rubber Hose Tempest Lightning Cloud -->
+<div class="my-space-md flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center shadow-inner relative group-hover:scale-105 transition-transform">
+<svg class="w-20 h-20 text-on-surface fill-current" viewBox="0 0 100 100">
+<!-- Grumpy Cloud Body -->
+<path d="M 30 50 A 14 14 0 0 1 50 35 A 18 18 0 0 1 78 45 A 14 14 0 0 1 72 65 L 28 65 A 12 12 0 0 1 30 50 Z" fill="currentColor"></path>
+<!-- Cartoon eyes -->
+<circle cx="45" cy="48" fill="#fef9f0" r="3"></circle>
+<circle cx="58" cy="48" fill="#fef9f0" r="3"></circle>
+<circle cx="46" cy="48" fill="currentColor" r="1.5"></circle>
+<circle cx="59" cy="48" fill="currentColor" r="1.5"></circle>
+<!-- Zigzag Thunderbolt with white boxing glove -->
+<polygon fill="currentColor" points="52,65 44,78 54,78 46,95 62,74 52,74"></polygon>
+</svg>
+</div>
+<div class="font-headline-sm text-headline-sm font-extrabold text-on-surface mt-space-sm">53° / 42°</div>
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface mt-0.5">Squalls &amp; Flash</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs text-center font-body-sm text-body-sm text-on-surface-variant italic">
+            "Thor's blacksmith shop clattering over the Great Lakes."
+          </div>
+</div>
+<!-- Panel 4: Thursday -->
+<div class="comic-panel bg-surface-container-low rounded-xl p-space-md shadow-md flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface">Thu • Oct 17</span>
+<span class="font-label-sm text-label-sm uppercase bg-surface-container-highest text-on-surface px-1.5 py-0.5 rounded">Panel 4</span>
+</div>
+<!-- Rubber Hose Puffy Gale Mascot -->
+<div class="my-space-md flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center shadow-inner relative group-hover:scale-105 transition-transform">
+<svg class="w-20 h-20 text-on-surface fill-current" viewBox="0 0 100 100">
+<!-- Swirling Vapor Cloud -->
+<path d="M 25 50 C 25 35 45 35 55 42 C 65 30 85 45 78 60 C 85 70 70 80 55 75 C 40 85 25 70 25 50 Z" fill="none" stroke="currentColor" stroke-width="4"></path>
+<!-- Spiraling Breath Trails -->
+<path d="M 68 55 Q 85 55 90 48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+<path d="M 65 62 Q 82 65 88 74" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+<!-- Pie eyes -->
+<circle cx="42" cy="50" fill="currentColor" r="3"></circle>
+<circle cx="54" cy="50" fill="currentColor" r="3"></circle>
+<path d="M 46 62 Q 52 66 58 62" fill="none" stroke="currentColor" stroke-width="2"></path>
+</svg>
+</div>
+<div class="font-headline-sm text-headline-sm font-extrabold text-on-surface mt-space-sm">62° / 47°</div>
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface mt-0.5">Whistling Gale</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs text-center font-body-sm text-body-sm text-on-surface-variant italic">
+            "Zephyr turns frisky! Coats flap like pelican wings."
+          </div>
+</div>
+<!-- Panel 5: Friday -->
+<div class="comic-panel bg-surface-container-low rounded-xl p-space-md shadow-md flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface">Fri • Oct 18</span>
+<span class="font-label-sm text-label-sm uppercase bg-surface-container-highest text-on-surface px-1.5 py-0.5 rounded">Panel 5</span>
+</div>
+<!-- Rubber Hose Peeking Sun behind Cumulus -->
+<div class="my-space-md flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center shadow-inner relative group-hover:scale-105 transition-transform">
+<svg class="w-20 h-20 text-on-surface fill-current" viewBox="0 0 100 100">
+<!-- Sun peeking behind -->
+<circle cx="38" cy="38" fill="currentColor" r="18"></circle>
+<ellipse cx="34" cy="34" fill="#fef9f0" rx="2" ry="4"></ellipse>
+<ellipse cx="42" cy="34" fill="#fef9f0" rx="2" ry="4"></ellipse>
+<!-- Front Cloud with gloved hand waving -->
+<path d="M 30 65 A 14 14 0 0 1 54 50 A 16 16 0 0 1 82 58 A 14 14 0 0 1 76 78 L 32 78 A 12 12 0 0 1 30 65 Z" fill="#fef9f0" stroke="currentColor" stroke-width="4"></path>
+<!-- Three-fingered white glove -->
+<path d="M 78 52 C 84 48 88 52 86 58 C 90 60 88 66 84 66" fill="#fef9f0" stroke="currentColor" stroke-width="2.5"></path>
+</svg>
+</div>
+<div class="font-headline-sm text-headline-sm font-extrabold text-on-surface mt-space-sm">66° / 50°</div>
+<span class="font-label-md text-label-md uppercase font-bold text-on-surface mt-0.5">Partly Overcast</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs text-center font-body-sm text-body-sm text-on-surface-variant italic">
+            "Gentle peace declared between the heavens and the lake."
+          </div>
+</div>
+</div>
+</div>
+<!-- 4-PANEL VINTAGE INSTRUMENT & METRICS GRID -->
+
+<!-- OLD FARMER'S ALMANAC & DISPATCH GAZETTE SNIPPET -->
+
+</div>
+</div>
+<script>
+  (function initVintageWeather() {
+    const cityButtons = document.querySelectorAll('.city-pill');
+    const cityInput = document.getElementById('city-search');
+    const dispatchBtn = document.getElementById('dispatch-btn');
+    const dropdown = document.getElementById('city-dropdown');
+    const panels = Array.from(document.querySelectorAll('.comic-panel'));
+
+    // Open-Meteo: free, no API key needed
+    const GEO_URL = 'https://geocoding-api.open-meteo.com/v1/search';
+    const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
+    const BTN_HTML = dispatchBtn.innerHTML;
+
+    // ---- Re-use the 5 original illustrations as icon templates (no design changes) ----
+    const ICONS = {};
+    ['sun', 'rain', 'storm', 'wind', 'partly'].forEach((key, i) => {
+      if (panels[i]) ICONS[key] = panels[i].querySelector('svg').innerHTML;
+    });
+    // One extra icon in the same rubber-hose style, only used for snowy days
+    ICONS.snow =
+      '<path d="M 30 45 A 14 14 0 0 1 50 30 A 18 18 0 0 1 78 40 A 14 14 0 0 1 72 58 L 28 58 A 12 12 0 0 1 30 45 Z" fill="currentColor"></path>' +
+      '<circle cx="45" cy="43" fill="#fef9f0" r="3"></circle><circle cx="58" cy="43" fill="#fef9f0" r="3"></circle>' +
+      '<circle cx="46" cy="43" fill="currentColor" r="1.5"></circle><circle cx="59" cy="43" fill="currentColor" r="1.5"></circle>' +
+      '<g stroke="currentColor" stroke-linecap="round" stroke-width="3" fill="none">' +
+      '<path d="M 36 68 L 36 80 M 31 74 L 41 74"></path>' +
+      '<path d="M 52 70 L 52 84 M 46 77 L 58 77"></path>' +
+      '<path d="M 68 68 L 68 80 M 63 74 L 73 74"></path></g>';
+
+    // ---- Weather code -> look (icon, label, captions) ----
+    const LOOK = {
+      clear:    { icon: 'sun',    label: 'Radiant Sunshine', quotes: [
+        'Old Sol dons his Sunday bowler and shines all daylight!',
+        'Not a cloud in sight, the barometer grins ear to ear!',
+        'Parasols out, gentlemen! The heavens wear their best blue.'] },
+      partly:   { icon: 'partly', label: 'Partly Overcast', quotes: [
+        'Gentle peace declared between the heavens and the lake.',
+        'Clouds and sunbeams trade calling cards like old gossips.',
+        'Old Sol plays peek-a-boo behind a woolly cumulus!'] },
+      overcast: { icon: 'partly', label: 'Leaden Skies', quotes: [
+        'A grey flannel blanket drawn tight across the heavens.',
+        'Sol has taken the day off; the clouds mind the shop.',
+        'Dull as a ledger, but not a drop to spare.'] },
+      fog:      { icon: 'partly', label: 'Pea-Soup Fog', quotes: [
+        'Pea-soup so thick the lamplighter lost his ladder!',
+        'Foghorns bellow and nobody knows where they are.',
+        'The whole town wrapped in cotton wool and mystery.'] },
+      drizzle:  { icon: 'rain',   label: 'Misty Drizzle', quotes: [
+        'Slickers required! Droplets tapping out ragtime melodies.',
+        'A fine mist, fit to curl a gentleman\'s moustache.',
+        'The heavens sprinkle like a dainty watering can.'] },
+      rain:     { icon: 'rain',   label: 'Steady Downpour', quotes: [
+        'Buckets from the balcony! Mind the puddles, citizens.',
+        'Umbrellas bloom like black mushrooms on every corner!',
+        'The gutters gurgle a hearty downpour chorus.'] },
+      snow:     { icon: 'snow',   label: 'Frosty Flurries', quotes: [
+        'Frosty flakes waltz down like powdered sugar on a pastry!',
+        'Sleigh bells wanted! The streets wear their ermine.',
+        'Old Man Winter shakes out his feather pillows.'] },
+      storm:    { icon: 'storm',  label: 'Squalls &amp; Flash', quotes: [
+        'Thor\'s blacksmith shop clattering across the heavens.',
+        'Flash and rumble! Hold fast to your bowler hats.',
+        'The sky cracks its knuckles with a mighty crash!'] },
+      wind:     { icon: 'wind',   label: 'Whistling Gale', quotes: [
+        'Zephyr turns frisky! Coats flap like pelican wings.',
+        'Hold your hats! A gale has come to tickle the weathervanes.',
+        'Even the lamp posts lean into this blustery wire.'] }
+    };
+
+    function categorize(code, windKmh) {
+      let c;
+      if (code === 0) c = 'clear';
+      else if (code <= 2) c = 'partly';
+      else if (code === 3) c = 'overcast';
+      else if (code === 45 || code === 48) c = 'fog';
+      else if (code >= 51 && code <= 57) c = 'drizzle';
+      else if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) c = 'rain';
+      else if ((code >= 71 && code <= 77) || code === 85 || code === 86) c = 'snow';
+      else if (code >= 95) c = 'storm';
+      else c = 'partly';
+      if (windKmh >= 40 && (c === 'clear' || c === 'partly' || c === 'overcast')) c = 'wind';
+      return c;
+    }
+
+    // ---- Panels ----
+    function fillPanel(panel, i, daily, fahrenheit) {
+      const [y, m, d] = daily.time[i].split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      const wd = date.toLocaleDateString('en-US', { weekday: 'short' });
+      const mo = date.toLocaleDateString('en-US', { month: 'short' });
+
+      const look = LOOK[categorize(daily.weather_code[i], daily.wind_speed_10m_max[i])];
+
+      panel.querySelector('.font-label-md').textContent = wd + ' \u2022 ' + mo + ' ' + d;
+      panel.querySelector('svg').innerHTML = ICONS[look.icon];
+      panel.querySelector('.font-headline-sm').textContent =
+        Math.round(daily.temperature_2m_max[i]) + '\u00B0 / ' + Math.round(daily.temperature_2m_min[i]) + '\u00B0';
+      panel.querySelector('.my-space-md > span').innerHTML = look.label;
+      panel.lastElementChild.textContent = '"' + look.quotes[i % look.quotes.length] + '"';
+    }
+
+    let weatherRequest = 0;
+    async function loadWeather(loc) {
+      const reqId = ++weatherRequest;
+      const fahrenheit = loc.country_code === 'US';
+      const url = FORECAST_URL +
+        '?latitude=' + loc.latitude + '&longitude=' + loc.longitude +
+        '&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max' +
+        '&temperature_unit=' + (fahrenheit ? 'fahrenheit' : 'celsius') +
+        '&timezone=auto&forecast_days=5';
+
+      panels.forEach(p => p.classList.add('opacity-50'));
       try {
-        const response = await fetch(originalUrl);
-        if (!response.ok) throw new Error('Could not load the original weather page.');
-        const source = await response.text();
-        const page = new DOMParser().parseFromString(source, 'text/html');
-        page.querySelectorAll('script').forEach(script => {
-          if (script.textContent.includes('initVintageWeather')) script.remove();
-        });
-
-        const input = page.getElementById('city-search');
-        const dispatch = page.getElementById('dispatch-btn');
-        if (!input || !dispatch) throw new Error('The original city search controls were not found.');
-
-        const suggestions = page.createElement('div');
-        suggestions.id = 'city-suggestions';
-        suggestions.setAttribute('role', 'listbox');
-        suggestions.hidden = true;
-        suggestions.style.cssText = 'position:absolute;z-index:50;top:calc(100% + 4px);left:0;right:0;max-height:260px;overflow:auto;background:#fff;border:2px solid #000;border-radius:4px;box-shadow:3px 3px 0 #000';
-        input.parentElement.appendChild(suggestions);
-
-        const styles = page.createElement('style');
-        styles.textContent = '#city-suggestions[hidden]{display:none}#city-suggestions button{display:block;width:100%;padding:.65rem .8rem;text-align:left;background:#fff;color:#1d1c16;border:0;border-bottom:1px solid #e7e2d9;font:12px Courier Prime,monospace;cursor:pointer}#city-suggestions button:hover,#city-suggestions button:focus{background:#f2ede4}';
-        page.head.appendChild(styles);
-
-        const searchScript = page.createElement('script');
-        searchScript.textContent = `(() => {
-          const input = document.getElementById('city-search');
-          const dispatch = document.getElementById('dispatch-btn');
-          const suggestions = document.getElementById('city-suggestions');
-          let timer;
-          let controller;
-          function closeSuggestions() {
-            suggestions.hidden = true;
-            suggestions.replaceChildren();
-          }
-          async function searchCities(query) {
-            if (controller) controller.abort();
-            controller = new AbortController();
-            try {
-              const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
-              url.search = new URLSearchParams({ name: query, count: '7', language: 'en', format: 'json' });
-              const response = await fetch(url, { signal: controller.signal });
-              if (!response.ok) throw new Error('City search is temporarily unavailable.');
-              const data = await response.json();
-              suggestions.replaceChildren();
-              if (!data.results || !data.results.length) {
-                closeSuggestions();
-                return;
-              }
-              data.results.forEach(city => {
-                const option = document.createElement('button');
-                option.type = 'button';
-                option.setAttribute('role', 'option');
-                option.textContent = [city.name, city.admin1, city.country]
-                  .filter(Boolean)
-                  .filter((part, index, parts) => parts.indexOf(part) === index)
-                  .join(', ');
-                option.addEventListener('click', () => {
-                  input.value = option.textContent;
-                  input.dataset.latitude = city.latitude;
-                  input.dataset.longitude = city.longitude;
-                  input.dataset.timezone = city.timezone || '';
-                  closeSuggestions();
-                });
-                suggestions.appendChild(option);
-              });
-              suggestions.hidden = false;
-            } catch (error) {
-              if (error.name !== 'AbortError') closeSuggestions();
-            }
-          }
-          input.addEventListener('input', () => {
-            clearTimeout(timer);
-            input.dataset.latitude = '';
-            input.dataset.longitude = '';
-            const query = input.value.trim();
-            closeSuggestions();
-            if (query.length >= 2) timer = setTimeout(() => searchCities(query), 300);
-          });
-          input.addEventListener('keydown', event => {
-            if (event.key === 'Escape') closeSuggestions();
-            if (event.key === 'Enter' && !suggestions.hidden) {
-              event.preventDefault();
-              const first = suggestions.querySelector('button');
-              if (first) first.click();
-            }
-          });
-          dispatch.addEventListener('click', event => {
-            event.preventDefault();
-            const query = input.value.trim();
-            if (query.length >= 2) searchCities(query);
-          });
-          document.querySelectorAll('.city-pill').forEach(button => {
-            button.addEventListener('click', () => {
-              document.querySelectorAll('.city-pill').forEach(pill => {
-                pill.classList.remove('bg-primary', 'text-on-primary');
-                pill.classList.add('bg-surface-container-high', 'text-on-surface');
-              });
-              button.classList.remove('bg-surface-container-high', 'text-on-surface');
-              button.classList.add('bg-primary', 'text-on-primary');
-              input.value = button.textContent.trim();
-              input.dataset.latitude = '';
-              input.dataset.longitude = '';
-              searchCities(input.value);
-            });
-          });
-          document.addEventListener('click', event => {
-            if (!event.target.closest('#city-search') && !event.target.closest('#city-suggestions')) closeSuggestions();
-          });
-        })();`;
-        page.body.appendChild(searchScript);
-        document.open();
-        document.write('<!DOCTYPE html>\n' + page.documentElement.outerHTML);
-        document.close();
-      } catch (error) {
-        document.body.textContent = 'Unable to load the original weather page. Please refresh to try again.';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Forecast request failed');
+        const data = await res.json();
+        if (reqId !== weatherRequest) return; // a newer request took over
+        panels.forEach((p, i) => { if (data.daily.time[i]) fillPanel(p, i, data.daily, fahrenheit); });
+      } finally {
+        if (reqId === weatherRequest) panels.forEach(p => p.classList.remove('opacity-50'));
       }
-    })();
-  </script>
-</body>
-</html>
+    }
+
+    // ---- Geocoding + dropdown ----
+    async function geocode(query, count) {
+      const res = await fetch(GEO_URL + '?name=' + encodeURIComponent(query) +
+        '&count=' + count + '&language=en&format=json');
+      if (!res.ok) throw new Error('Geocoding failed');
+      const data = await res.json();
+      return data.results || [];
+    }
+
+    function labelOf(r) {
+      const parts = [r.name];
+      if (r.admin1 && r.admin1 !== r.name) parts.push(r.admin1);
+      if (r.country) parts.push(r.country);
+      return parts.join(', ');
+    }
+
+    let results = [];
+    let activeIndex = -1;
+
+    function hideDropdown() {
+      dropdown.classList.add('hidden');
+      activeIndex = -1;
+    }
+
+    function highlight(index) {
+      activeIndex = index;
+      Array.from(dropdown.children).forEach((el, i) => {
+        el.classList.toggle('bg-surface-container-high', i === index);
+      });
+    }
+
+    function renderDropdown(items) {
+      dropdown.innerHTML = '';
+      results = items;
+      activeIndex = -1;
+      items.forEach((r, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.setAttribute('role', 'option');
+        btn.className = 'w-full text-left px-space-sm py-2 flex items-center gap-2 font-label-md text-label-md uppercase text-on-surface hover:bg-surface-container-high border-b border-primary/20 last:border-b-0';
+        const icon = document.createElement('span');
+        icon.className = 'material-symbols-outlined text-base shrink-0';
+        icon.textContent = 'location_on';
+        const text = document.createElement('span');
+        text.className = 'flex-1 truncate';
+        const strong = document.createElement('span');
+        strong.className = 'font-bold';
+        strong.textContent = r.name;
+        const rest = document.createElement('span');
+        rest.className = 'text-on-surface-variant';
+        rest.textContent = labelOf(r).slice(r.name.length);
+        text.append(strong, rest);
+        btn.append(icon, text);
+        btn.addEventListener('mousedown', e => e.preventDefault()); // keep input focus
+        btn.addEventListener('mouseenter', () => highlight(i));
+        btn.addEventListener('click', () => pick(r));
+        dropdown.appendChild(btn);
+      });
+      dropdown.classList.remove('hidden');
+    }
+
+    function showMessage(msg) {
+      dropdown.innerHTML = '';
+      results = [];
+      const p = document.createElement('div');
+      p.className = 'px-space-sm py-2 font-label-md text-label-md uppercase text-on-surface-variant';
+      p.textContent = msg;
+      dropdown.appendChild(p);
+      dropdown.classList.remove('hidden');
+    }
+
+    // ---- Pills ----
+    function activatePill(name) {
+      cityButtons.forEach(b => {
+        const on = name && b.textContent.trim().toLowerCase() === name.toLowerCase();
+        b.classList.toggle('bg-primary', !!on);
+        b.classList.toggle('text-on-primary', !!on);
+        b.classList.toggle('bg-surface-container-high', !on);
+        b.classList.toggle('text-on-surface', !on);
+      });
+    }
+
+    // ---- State + selection ----
+    let currentLoc = { name: 'Chicago', latitude: 41.85, longitude: -87.65, country_code: 'US' };
+    let currentLabel = cityInput.value; // "Old Chicago, Illinois" stays as the starting text
+
+    function setBusy(busy) {
+      if (busy) {
+        dispatchBtn.textContent = 'DISPATCHING...';
+        dispatchBtn.disabled = true;
+      } else {
+        dispatchBtn.innerHTML = BTN_HTML;
+        dispatchBtn.disabled = false;
+      }
+    }
+
+    async function pick(loc) {
+      currentLoc = loc;
+      currentLabel = labelOf(loc);
+      cityInput.value = currentLabel;
+      hideDropdown();
+      activatePill(loc.name);
+      setBusy(true);
+      try {
+        await loadWeather(loc);
+      } catch (e) {
+        showMessage('The wire is down. Try again shortly.');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function dispatch() {
+      const val = cityInput.value.trim();
+      if (!val) return;
+      setBusy(true);
+      try {
+        if (val === currentLabel) {
+          await loadWeather(currentLoc);
+        } else {
+          let list = await geocode(val, 1);
+          if (!list.length && val.indexOf(',') > -1) list = await geocode(val.split(',')[0].trim(), 1);
+          if (!list.length) { showMessage('No township found by that name'); return; }
+          currentLoc = list[0];
+          currentLabel = labelOf(list[0]);
+          cityInput.value = currentLabel;
+          hideDropdown();
+          activatePill(list[0].name);
+          await loadWeather(list[0]);
+        }
+      } catch (e) {
+        showMessage('The wire is down. Try again shortly.');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    // ---- Events ----
+    let debounce;
+    let searchId = 0;
+    cityInput.addEventListener('input', () => {
+      clearTimeout(debounce);
+      const q = cityInput.value.trim();
+      if (q.length < 2) { hideDropdown(); return; }
+      debounce = setTimeout(async () => {
+        const id = ++searchId;
+        try {
+          const list = await geocode(q, 5);
+          if (id !== searchId) return;
+          if (list.length) renderDropdown(list); else showMessage('No township found by that name');
+        } catch (e) {
+          if (id === searchId) showMessage('The wire is down. Try again shortly.');
+        }
+      }, 250);
+    });
+
+    cityInput.addEventListener('keydown', e => {
+      const open = !dropdown.classList.contains('hidden') && results.length;
+      if (e.key === 'ArrowDown' && open) {
+        e.preventDefault();
+        highlight((activeIndex + 1) % results.length);
+      } else if (e.key === 'ArrowUp' && open) {
+        e.preventDefault();
+        highlight((activeIndex - 1 + results.length) % results.length);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (open && activeIndex >= 0) pick(results[activeIndex]); else { clearTimeout(debounce); searchId++; dispatch(); }
+      } else if (e.key === 'Escape') {
+        hideDropdown();
+      }
+    });
+
+    cityInput.addEventListener('focus', () => {
+      if (results.length && cityInput.value.trim() !== currentLabel) dropdown.classList.remove('hidden');
+    });
+
+    document.addEventListener('click', e => {
+      if (!dropdown.contains(e.target) && e.target !== cityInput) hideDropdown();
+    });
+
+    dispatchBtn.addEventListener('click', () => { clearTimeout(debounce); searchId++; dispatch(); });
+
+    cityButtons.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const name = btn.textContent.trim();
+        activatePill(name);
+        cityInput.value = name;
+        hideDropdown();
+        setBusy(true);
+        try {
+          const list = await geocode(name, 1);
+          if (!list.length) { showMessage('No township found by that name'); return; }
+          await pick(list[0]);
+        } catch (e) {
+          showMessage('The wire is down. Try again shortly.');
+        } finally {
+          setBusy(false);
+        }
+      });
+    });
+
+    // ---- First load: Chicago ----
+    loadWeather(currentLoc).catch(() => {});
+  })();
+</script></main><footer class="w-full bg-surface-container border-t-2 border-primary mt-space-xl"><div class="max-w-7xl mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-gutter border-b-2 border-primary pb-space-lg mb-space-lg"><div class="space-y-space-xs md:col-span-2"><h3 class="font-headline-sm text-headline-sm uppercase font-bold text-on-surface">The Daily Barometer Gazette</h3><p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">Printed and published daily at the Central Linotype Press. Meteorological conditions, squall observances, and rubber-hose illustrated atmospheric theatrics for discerning citizens.</p></div><div><h4 class="font-label-md text-label-md uppercase font-bold text-on-surface mb-space-xs">Departments</h4><ul class="space-y-1 font-label-sm text-label-sm text-on-surface-variant"><li class="hover:text-on-surface"><a data-path="front-page-dispatch" href="#">Main Edition</a></li><li class="hover:text-on-surface"><a data-path="hourly-comic-strip" href="#">Serialized Hours</a></li><li class="hover:text-on-surface"><a data-path="regional-isobars" href="#">Atmospheric Isobars</a></li><li class="hover:text-on-surface"><a data-path="almanac-and-records" href="#">Weather Almanac</a></li></ul></div><div><h4 class="font-label-md text-label-md uppercase font-bold text-on-surface mb-space-xs">Telegraph &amp; Wire</h4><p class="font-label-sm text-label-sm text-on-surface-variant">Direct pneumatic wire: WIRE-BAROMETER-09</p><p class="font-label-sm text-label-sm text-on-surface-variant">Entered as Second-Class Mail Matter at the Post Office.</p></div></div><div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant uppercase"><span>© MCMXXIV THE DAILY BAROMETER PRESS CO. ALL RIGHTS RESERVED.</span><span class="font-bold text-on-surface">"A MIGHTY WIND BLOWS NO GOOD WITHOUT A STEADY HAND!"</span></div></div></footer>
+
+</body></html>
