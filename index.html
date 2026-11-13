@@ -1,152 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#fef9f0">
-<title>The Daily Barometer — Weather Dispatch</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Courier+Prime:wght@400;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class',theme:{extend:{colors:{'primary':'#000000','on-primary':'#ffffff','surface':'#fef9f0','on-surface':'#1d1c16','surface-container':'#f2ede4','surface-container-low':'#f8f3ea','surface-container-high':'#ece8df','surface-container-highest':'#e7e2d9','surface-container-lowest':'#ffffff','on-surface-variant':'#4b4640'},spacing:{'margin':'1rem','space-xs':'0.25rem','space-sm':'0.5rem','space-md':'1rem','space-lg':'1.5rem','space-xl':'2.5rem','gutter':'1rem'},fontFamily:{'headline':['Bricolage Grotesque','sans-serif'],'body':['Newsreader','serif'],'label':['Courier Prime','monospace']}}}}</script>
-<style>
-@layer base{html,body{margin:0;padding:0}body{font-family:'Newsreader',serif;overscroll-behavior:none}main>:first-child{margin-top:0!important}main>:last-child{margin-bottom:0!important}}::-webkit-scrollbar{display:none}.comic-panel{min-height:290px}.city-suggestions{position:absolute;z-index:20;top:calc(100% + 5px);left:0;right:0;max-height:260px;overflow:auto;background:#fff;border:2px solid #000;border-radius:.5rem;box-shadow:3px 3px 0 #000}.city-suggestions[hidden]{display:none}.city-suggestion{width:100%;display:block;text-align:left;background:#fff;color:#1d1c16;padding:.75rem 1rem;border:0;border-bottom:1px solid #e7e2d9;font:14px 'Courier Prime',monospace;cursor:pointer}.city-suggestion:hover,.city-suggestion:focus{background:#f2ede4}.weather-icon{font-size:64px!important}.dispatch-status{min-height:1.25rem}.hour-card{min-width:105px}.hourly-scroll{scrollbar-width:thin}.loading{opacity:.65;pointer-events:none}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather Dispatch</title>
 </head>
-<body class="bg-surface text-on-surface antialiased selection:bg-primary selection:text-on-primary">
-<main class="w-full bg-surface"><div class="max-w-7xl mx-auto w-full px-4 md:px-12 py-8 md:py-10 flex flex-col gap-8">
-<!-- SEARCH & TELEGRAPH DISPATCH BAR -->
-<section class="bg-surface-container-lowest border-2 border-primary rounded-xl p-5 md:p-8 shadow-[4px_4px_0_0_#000000] relative" aria-labelledby="dispatch-heading">
-<div class="flex flex-col md:flex-row items-center gap-6">
-<div class="flex flex-col items-center shrink-0"><div class="w-28 h-28 md:w-32 md:h-32 rounded-full border-2 border-primary overflow-hidden shadow-[2px_2px_0_0_#000000]"><img src="https://lh3.googleusercontent.com/aida/ALJJyrAHDSOOvMwPjYxRApes2aHmgLffYI3YzTfe6u_slH8X5FDtbuBoAQ0JLbb85mVDt8WrQIAHVJeJjh6-TemXh9c2BtZ-BDVpX6p0Mtoeiqu4uymfJpidtEeUy5MoQ0iUKeaSL5iiT0gzgbKt7lcQ1f8rHVsjeXl0i7Z6SSYjWzAlG35MRyPyelV7LASmYUvKpk1-wE48CdvhEgUEQvxFPBlcFGwUyC7ZIuTf_fRbniYP8" alt="Zephyr the Cloud cartoon" class="w-full h-full object-cover"></div><span class="font-label-sm text-xs uppercase tracking-wider text-on-surface-variant font-bold mt-2 text-center">Zephyr the Cloud</span></div>
-<div class="flex-1 w-full flex flex-col gap-3"><div class="flex flex-wrap items-center justify-between gap-2"><div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-high border border-primary rounded font-label-sm text-xs uppercase tracking-widest font-bold"><span class="material-symbols-outlined text-sm">campaign</span>Atmospheric Telegraph Dispatch</div><span class="font-label-sm text-xs uppercase tracking-wider text-on-surface-variant">Direct pneumatic wire: WIRE-BAROMETER-09</span></div>
-<h1 id="dispatch-heading" class="font-headline text-2xl md:text-3xl uppercase font-extrabold leading-tight">“Inquire of the Atmospheric Conditions &amp; Gale Forewarnings!”</h1><p class="text-on-surface-variant italic">Summon current readings, squalls, and celestial funnies for any township, port, or continental station.</p>
-<form id="search-form" class="flex flex-col sm:flex-row gap-2" autocomplete="off"><div class="relative flex-1"><div class="flex items-center bg-white border-2 border-primary rounded shadow-[2px_2px_0_0_#000000]"><span class="material-symbols-outlined pl-3 text-xl select-none">explore</span><input id="city-search" class="w-full bg-transparent px-3 py-3 font-label text-sm outline-none" placeholder="Inquire City, Port or Township…" type="search" aria-label="Search for a city" aria-controls="city-suggestions" aria-autocomplete="list" required></div><div id="city-suggestions" class="city-suggestions" role="listbox" hidden></div></div><button id="dispatch-btn" type="submit" class="bg-primary text-on-primary px-6 py-3 rounded font-label text-sm font-bold uppercase tracking-wider shadow-[2px_2px_0_0_#000000] hover:bg-surface-container-highest hover:text-on-surface transition-colors flex items-center justify-center gap-2 shrink-0"><span>Inquire</span><span class="material-symbols-outlined text-sm">send</span></button></form>
-<div class="flex items-center gap-2 flex-wrap"><span class="font-label text-xs uppercase text-on-surface-variant tracking-wider font-bold mr-1">Quick Wires:</span><button type="button" class="city-pill px-3 py-1 bg-primary text-on-primary font-label text-xs rounded uppercase border border-primary">Chicago</button><button type="button" class="city-pill px-3 py-1 bg-surface-container-high text-on-surface font-label text-xs rounded uppercase border border-primary/40 hover:bg-surface-container-highest">New York</button><button type="button" class="city-pill px-3 py-1 bg-surface-container-high text-on-surface font-label text-xs rounded uppercase border border-primary/40 hover:bg-surface-container-highest">London</button><button type="button" class="city-pill px-3 py-1 bg-surface-container-high text-on-surface font-label text-xs rounded uppercase border border-primary/40 hover:bg-surface-container-highest">San Francisco</button><button type="button" class="city-pill px-3 py-1 bg-surface-container-high text-on-surface font-label text-xs rounded uppercase border border-primary/40 hover:bg-surface-container-highest">Paris</button></div><p id="dispatch-status" class="dispatch-status font-label text-xs text-on-surface-variant" role="status" aria-live="polite">Type a city and choose a station from the list.</p></div></div>
-</section>
-<!-- LIVE WEATHER REPORT -->
-<section id="current-weather" class="bg-surface-container-low border-2 border-primary rounded-xl p-5 md:p-8 shadow-[4px_4px_0_0_#000000]" aria-live="polite"><div class="flex flex-wrap justify-between items-start gap-4"><div><span class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-bold">Current station report</span><h2 id="current-city" class="font-headline text-3xl md:text-4xl uppercase font-extrabold mt-1">Old Chicago, Illinois</h2><p id="current-time" class="font-label text-xs text-on-surface-variant mt-1">Select a city to receive the latest report.</p></div><div class="text-right"><span id="current-condition" class="font-label text-sm uppercase font-bold">Awaiting dispatch</span></div></div><div class="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] items-center gap-6 mt-5"><div class="flex items-center gap-5"><span id="current-icon" class="material-symbols-outlined weather-icon">partly_cloudy_day</span><div><div id="current-temp" class="font-headline text-6xl md:text-8xl font-extrabold leading-none">—°</div><div class="font-label text-xs uppercase tracking-wider mt-2">Current temperature</div></div></div><div class="grid grid-cols-3 gap-2"><div class="bg-white border border-primary/30 rounded p-3"><span class="font-label text-[10px] uppercase">Feels like</span><strong id="feels-like" class="block font-headline text-xl mt-1">—</strong></div><div class="bg-white border border-primary/30 rounded p-3"><span class="font-label text-[10px] uppercase">Humidity</span><strong id="humidity" class="block font-headline text-xl mt-1">—</strong></div><div class="bg-white border border-primary/30 rounded p-3"><span class="font-label text-[10px] uppercase">Wind</span><strong id="wind-speed" class="block font-headline text-xl mt-1">—</strong></div></div></div><div class="mt-6"><div class="flex flex-wrap justify-between items-center gap-2 mb-3"><h3 class="font-headline text-xl uppercase font-bold">Hourly wire report</h3><span class="font-label text-xs text-on-surface-variant">Next 12 hours · local time</span></div><div id="hourly-forecast" class="hourly-scroll flex gap-3 overflow-x-auto pb-2"><p class="font-label text-xs text-on-surface-variant">Hourly forecast will appear after a city is selected.</p></div></div></section>
-<!-- 5-DAY SUNDAY COMIC STRIP FORECAST -->
-<section class="flex flex-col gap-3 py-2"><div class="flex flex-wrap items-center justify-between gap-2 px-1"><div><span class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-bold">Serialized Daily Ephemera</span><h2 class="font-headline text-2xl md:text-3xl uppercase font-bold">The 5-Panel Sunday Weather Funnies</h2></div><div class="font-label text-xs text-on-surface-variant uppercase tracking-wider font-bold">Drawn by Linotype Syndicate • Plate No. 582</div></div><div id="daily-forecast" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div></section>
-</div></main>
-<footer class="w-full bg-surface-container border-t-2 border-primary mt-8"><div class="max-w-7xl mx-auto px-4 md:px-12 py-8"><div class="flex flex-col md:flex-row justify-between gap-5"><div class="max-w-xl"><h2 class="font-headline text-xl uppercase font-bold">The Daily Barometer Gazette</h2><p class="text-sm text-on-surface-variant mt-2">Printed and published daily at the Central Linotype Press. Meteorological conditions and illustrated atmospheric theatrics for discerning citizens.</p></div><div class="font-label text-xs text-on-surface-variant uppercase">Weather data furnished by Open-Meteo</div></div><div class="border-t border-primary/30 mt-6 pt-4 flex flex-wrap justify-between gap-2 font-label text-[10px] text-on-surface-variant uppercase"><span>© MCMXXIV The Daily Barometer Press Co.</span><span>“A mighty wind blows no good without a steady hand!”</span></div></div></footer>
-<script>
-(() => {
-  const input = document.getElementById('city-search');
-  const suggestions = document.getElementById('city-suggestions');
-  const form = document.getElementById('search-form');
-  const status = document.getElementById('dispatch-status');
-  const dispatchBtn = document.getElementById('dispatch-btn');
-  let debounceTimer;
-  let searchController;
-  let weatherController;
+<body>
+  <p style="font:16px sans-serif;padding:2rem">Loading the original weather dispatch…</p>
+  <script>
+    (async function restoreOriginalDesign() {
+      const originalUrl = 'https://raw.githubusercontent.com/MSherK/19s-weather/206180f7125202d53d8c37513ad631076ac1355d/index.html';
+      try {
+        const response = await fetch(originalUrl);
+        if (!response.ok) throw new Error('Could not load the original page.');
+        const source = await response.text();
+        const parsed = new DOMParser().parseFromString(source, 'text/html');
 
-  const descriptions = {0:'Radiant sunshine',1:'Mainly clear',2:'Partly overcast',3:'Overcast skies',45:'Foggy conditions',48:'Rime fog',51:'Light drizzle',53:'Misty drizzle',55:'Heavy drizzle',56:'Freezing drizzle',57:'Heavy freezing drizzle',61:'Light rain',63:'Steady rain',65:'Heavy rain',66:'Freezing rain',67:'Heavy freezing rain',71:'Light snow',73:'Snowfall',75:'Heavy snow',77:'Snow grains',80:'Passing showers',81:'Rain showers',82:'Heavy showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunder & lightning',96:'Thunder with hail',99:'Severe thunderstorm'};
-  const icons = code => code === 0 ? 'sunny' : code === 1 ? 'partly_cloudy_day' : code === 2 ? 'partly_cloudy_day' : code === 3 ? 'cloud' : [45,48].includes(code) ? 'foggy' : [51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code) ? 'rainy' : [71,73,75,77,85,86].includes(code) ? 'weather_snowy' : [95,96,99].includes(code) ? 'thunderstorm' : 'cloud';
-  const description = code => descriptions[code] || 'Conditions reported';
-  const setStatus = (message, error = false) => { status.textContent = message; status.classList.toggle('text-red-700', error); };
+        // Replace only the original demo handlers; all original markup, styles and images remain intact.
+        parsed.querySelectorAll('script').forEach(script => {
+          if (script.textContent.includes('initVintageWeather')) script.remove();
+        });
 
-  function closeSuggestions() { suggestions.hidden = true; suggestions.replaceChildren(); }
-  async function searchCities(query) {
-    if (searchController) searchController.abort();
-    searchController = new AbortController();
-    try {
-      const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
-      url.search = new URLSearchParams({name:query,count:'7',language:'en',format:'json'});
-      const response = await fetch(url, {signal:searchController.signal});
-      if (!response.ok) throw new Error('The city directory could not be reached. Please try again.');
-      const data = await response.json();
-      suggestions.replaceChildren();
-      if (!data.results?.length) { closeSuggestions(); setStatus('No matching cities found. Try another spelling or include the country.'); return; }
-      data.results.forEach(city => {
-        const option = document.createElement('button');
-        option.type = 'button'; option.className = 'city-suggestion'; option.setAttribute('role','option');
-        option.textContent = [city.name,city.admin1,city.country].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i).join(', ');
-        option.addEventListener('click', () => { input.value = option.textContent; closeSuggestions(); loadWeather(city); });
-        suggestions.append(option);
-      });
-      suggestions.hidden = false;
-      setStatus('Choose the correct city from the dispatch list.');
-    } catch (error) { if (error.name !== 'AbortError') setStatus(error.message || 'City search failed. Please try again.', true); }
-  }
-  input.addEventListener('input', () => {
-    clearTimeout(debounceTimer); closeSuggestions();
-    const query = input.value.trim();
-    if (query.length < 2) { setStatus('Type at least two letters to search.'); return; }
-    setStatus('Searching the world gazetteer…'); debounceTimer = setTimeout(() => searchCities(query), 300);
-  });
-  form.addEventListener('submit', event => { event.preventDefault(); const query = input.value.trim(); if (query.length < 2) { setStatus('Enter at least two letters to inquire.', true); return; } clearTimeout(debounceTimer); searchCities(query); });
-  document.addEventListener('click', event => { if (!event.target.closest('.relative')) closeSuggestions(); });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeSuggestions(); });
-  document.querySelectorAll('.city-pill').forEach(button => button.addEventListener('click', () => {
-    document.querySelectorAll('.city-pill').forEach(pill => { pill.classList.remove('bg-primary','text-on-primary'); pill.classList.add('bg-surface-container-high','text-on-surface'); });
-    button.classList.remove('bg-surface-container-high','text-on-surface'); button.classList.add('bg-primary','text-on-primary');
-    input.value = button.textContent.trim(); searchCities(input.value);
-  }));
+        const input = parsed.getElementById('city-search');
+        const dispatch = parsed.getElementById('dispatch-btn');
+        if (!input || !dispatch) throw new Error('The original city search controls were not found.');
 
-  async function loadWeather(city) {
-    if (weatherController) weatherController.abort();
-    weatherController = new AbortController();
-    dispatchBtn.disabled = true; dispatchBtn.classList.add('loading'); dispatchBtn.querySelector('span').textContent = 'DISPATCHING…';
-    setStatus('Receiving the latest weather wire…');
-    const url = new URL('https://api.open-meteo.com/v1/forecast');
-    url.search = new URLSearchParams({latitude:city.latitude,longitude:city.longitude,current:'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m',hourly:'temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code',daily:'weather_code,temperature_2m_max,temperature_2m_min',forecast_days:'5',timezone:'auto'});
-    try {
-      const response = await fetch(url, {signal:weatherController.signal});
-      if (!response.ok) throw new Error('The Open-Meteo forecast could not be reached. Please try again.');
-      const data = await response.json();
-      if (!data.current) throw new Error('No current weather report is available for this station.');
-      renderWeather(city, data); setStatus('Dispatch received. Station readings shown in local time.');
-    } catch (error) { if (error.name !== 'AbortError') setStatus(error.message || 'Unable to retrieve the weather report.', true); }
-    finally { dispatchBtn.disabled = false; dispatchBtn.classList.remove('loading'); dispatchBtn.querySelector('span').textContent = 'Inquire'; }
-  }
-  function renderWeather(city, data) {
-    const current = data.current, units = data.current_units || {};
-    document.getElementById('current-city').textContent = [city.name,city.admin1,city.country].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i).join(', ');
-    document.getElementById('current-time').textContent = `Local station time · ${current.time.replace('T',' ')}`;
-    document.getElementById('current-condition').textContent = description(current.weather_code);
-    document.getElementById('current-icon').textContent = icons(current.weather_code);
-    document.getElementById('current-temp').textContent = `${Math.round(current.temperature_2m)}${units.temperature_2m || '°C'}`;
-    document.getElementById('feels-like').textContent = `${Math.round(current.apparent_temperature)}${units.apparent_temperature || '°C'}`;
-    document.getElementById('humidity').textContent = `${current.relative_humidity_2m}${units.relative_humidity_2m || '%'}`;
-    document.getElementById('wind-speed').textContent = `${current.wind_speed_10m} ${units.wind_speed_10m || 'km/h'}`;
-    const hours = document.getElementById('hourly-forecast'); hours.replaceChildren();
-    const times = data.hourly?.time || []; let start = times.findIndex(time => time >= current.time); if (start < 0) start = 0;
-    for (let i=start;i<Math.min(start+12,times.length);i++) {
-      const card=document.createElement('div'); card.className='hour-card shrink-0 bg-white border border-primary/30 rounded-lg p-3 text-center';
-      const time=document.createElement('div'); time.className='font-label text-xs'; time.textContent=new Intl.DateTimeFormat(undefined,{hour:'numeric',timeZone:data.timezone}).format(new Date(times[i]));
-      const icon=document.createElement('span'); icon.className='material-symbols-outlined text-3xl my-1'; icon.textContent=icons(data.hourly.weather_code?.[i]);
-      const temp=document.createElement('strong'); temp.className='block font-headline text-xl'; temp.textContent=`${Math.round(data.hourly.temperature_2m[i])}${data.hourly_units?.temperature_2m || '°C'}`;
-      const meta=document.createElement('small'); meta.className='font-label text-[10px] text-on-surface-variant'; meta.textContent=`${data.hourly.relative_humidity_2m[i]}% RH · ${data.hourly.wind_speed_10m[i]} ${data.hourly_units?.wind_speed_10m || 'km/h'}`;
-      card.append(time,icon,temp,meta); hours.append(card);
-    }
-    renderDaily(data);
-  }
-  function renderDaily(data) {
-    const strip=document.getElementById('daily-forecast'); strip.replaceChildren();
-    const daily=data.daily; if (!daily?.time) return;
-    daily.time.forEach((date,index)=>{
-      const day=new Date(`${date}T12:00:00`);
-      const panel=document.createElement('article'); panel.className='comic-panel bg-surface-container-low border border-primary/20 rounded-xl p-4 shadow-md flex flex-col justify-between hover:-translate-y-1 transition-transform group';
-      const heading=document.createElement('div'); heading.className='flex items-center justify-between pb-2';
-      const dayName=document.createElement('span'); dayName.className='font-label text-xs uppercase font-bold'; dayName.textContent=new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric'}).format(day);
-      const number=document.createElement('span'); number.className='font-label text-[10px] uppercase bg-surface-container-highest px-2 py-1 rounded'; number.textContent=`Panel ${index+1}`; heading.append(dayName,number);
-      const body=document.createElement('div'); body.className='my-4 flex flex-col items-center text-center';
-      const badge=document.createElement('div'); badge.className='w-24 h-24 rounded-full bg-surface-container flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform';
-      const icon=document.createElement('span'); icon.className='material-symbols-outlined text-6xl'; icon.textContent=icons(daily.weather_code[index]); badge.append(icon);
-      const temps=document.createElement('div'); temps.className='font-headline text-2xl font-extrabold mt-3'; temps.textContent=`${Math.round(daily.temperature_2m_max[index])}° / ${Math.round(daily.temperature_2m_min[index])}°`;
-      const condition=document.createElement('span'); condition.className='font-label text-xs uppercase font-bold mt-1'; condition.textContent=description(daily.weather_code[index]); body.append(badge,temps,condition);
-      const caption=document.createElement('div'); caption.className='bg-surface-container rounded p-2 text-center text-sm text-on-surface-variant italic'; caption.textContent=`“${dailyCaption(daily.weather_code[index])}”`;
-      panel.append(heading,body,caption); strip.append(panel);
-    });
-  }
-  function dailyCaption(code) {
-    if (code===0||code===1) return 'Old Sol shines bright upon the town today!';
-    if ([2,3].includes(code)) return 'Clouds parade across the heavens in stately fashion.';
-    if ([45,48].includes(code)) return 'A silver fog rolls in; mind your step, good citizen.';
-    if ([51,53,55,61,63,65,80,81,82].includes(code)) return 'Slickers required! Droplets tap out ragtime melodies.';
-    if ([71,73,75,77,85,86].includes(code)) return 'The snowflakes dance a merry, wintry quadrille.';
-    if ([95,96,99].includes(code)) return 'Thor’s blacksmith shop clatters above the rooftops.';
-    return 'A new chapter in the weather dispatch unfolds.';
-  }
-})();
-</script>
-</body></html>
+        const searchWrap = input.parentElement;
+        const suggestions = parsed.createElement('div');
+        suggestions.id = 'city-suggestions';
+        suggestions.setAttribute('role', 'listbox');
+        suggestions.hidden = true;
+        suggestions.style.cssText = 'position:absolute;z-index:50;top:100%;left:0;right:0;max-height:16rem;overflow:auto;background:#fff;border:2px solid #000;border-radius:.5rem;box-shadow:3px 3px 0 #000;margin-top:4px';
+        searchWrap.appendChild(suggestions);
+
+        const status = parsed.createElement('p');
+        status.id = 'weather-dispatch-status';
+        status.setAttribute('role', 'status');
+        status.setAttribute('aria-live', 'polite');
+        status.className = 'font-label-sm text-label-sm text-on-surface-variant mt-1';
+        dispatch.closest('.flex.flex-col')?.appendChild(status);
+
+        // Use the originally empty hero area for the selected city's live report.
+        const main = parsed.querySelector('main');
+        const content = main?.querySelector('.max-w-7xl');
+        const forecast = content?.querySelector('.py-space-lg');
+        const report = parsed.createElement('section');
+        report.id = 'live-weather-report';
+        report.className = 'bg-surface-container-low border-2 border-primary rounded-xl p-space-lg shadow-[4px_4px_0_0_#000000]';
+        report.hidden = true;
+        report.innerHTML = '<div class="flex flex-wrap items-start justify-between gap-4"><div><span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Current station report</span><h2 id="live-city" class="font-headline-lg text-headline-lg uppercase font-bold mt-1"></h2><p id="live-time" class="font-label-sm text-label-sm text-on-surface-variant"></p></div><div class="text-right"><span id="live-condition" class="font-label-md text-label-md uppercase font-bold"></span><div id="live-temperature" class="font-headline-lg text-headline-lg font-extrabold mt-2"></div></div></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4"><div class="bg-surface-container-lowest rounded p-space-sm"><span class="font-label-sm text-label-sm uppercase">Feels like</span><strong id="live-feels" class="block font-headline-sm text-headline-sm mt-1"></strong></div><div class="bg-surface-container-lowest rounded p-space-sm"><span class="font-label-sm text-label-sm uppercase">Humidity</span><strong id="live-humidity" class="block font-headline-sm text-headline-sm mt-1"></strong></div><div class="bg-surface-container-lowest rounded p-space-sm"><span class="font-label-sm text-label-sm uppercase">Wind speed</span><strong id="live-wind" class="block font-headline-sm text-headline-sm mt-1"></strong></div></div><h3 class="font-headline-md text-headline-md uppercase font-bold mt-space-lg">Hourly conditions</h3><div id="live-hourly" class="flex gap-3 overflow-x-auto py-space-sm"></div>';
+        if (forecast) content.insertBefore(report, forecast);
+
+        const api = parsed.createElement('script');
+        api.textContent = `(() => {
+          const input = document.getElementById('city-search');
+          const button = document.getElementById('dispatch-btn');
+          const list = document.getElementById('city-suggestions');
+          const status = document.getElementById('weather-dispatch-status');
+          const report = document.getElementById('live-weather-report');
+          let timer, controller, weatherController;
+          const say = (text, error = false) => { status.textContent = text; status.classList.toggle('text-error', error); };
+          const close = () => { list.hidden = true; list.replaceChildren(); };
+          const labels = {0:'Radiant sunshine',1:'Mainly clear',2:'Partly overcast',3:'Overcast',45:'Foggy',48:'Rime fog',51:'Light drizzle',53:'Misty drizzle',55:'Heavy drizzle',56:'Freezing drizzle',57:'Freezing drizzle',61:'Light rain',63:'Steady rain',65:'Heavy rain',66:'Freezing rain',67:'Freezing rain',71:'Light snow',73:'Snowfall',75:'Heavy snow',77:'Snow grains',80:'Passing showers',81:'Rain showers',82:'Heavy showers',85:'Snow showers',86:'Snow showers',95:'Thunderstorm',96:'Thunderstorm',99:'Severe thunderstorm'};
+          async function search(query) {
+            if (controller) controller.abort();
+            controller = new AbortController();
+            try {
+              const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
+              url.search = new URLSearchParams({name:query,count:'7',language:'en',format:'json'});
+              const response = await fetch(url, {signal:controller.signal});
+              if (!response.ok) throw new Error('City search is unavailable. Please try again.');
+              const data = await response.json();
+              list.replaceChildren();
+              if (!data.results?.length) { close(); say('No matching cities found. Try another spelling.'); return; }
+              data.results.forEach(city => {
+                const option = document.createElement('button');
+                option.type = 'button'; option.setAttribute('role','option');
+                option.textContent = [city.name,city.admin1,city.country].filter(Boolean).filter((value,index,all)=>all.indexOf(value)===index).join(', ');
+                option.style.cssText = 'display:block;width:100%;text-align:left;padding:.7rem 1rem;background:#fff;color:#1d1c16;border:0;border-bottom:1px solid #e7e2d9;font:14px Courier Prime,monospace;cursor:pointer';
+                option.addEventListener('mouseenter',()=>option.style.background='#f2ede4');
+                option.addEventListener('mouseleave',()=>option.style.background='#fff');
+                option.addEventListener('click',()=>{input.value=option.textContent;close();load(city);});
+                list.appendChild(option);
+              });
+              list.hidden = false; say('Choose a city from the dispatch list.');
+            } catch(error) { if(error.name!=='AbortError') say(error.message || 'City search failed.',true); }
+          }
+          input.addEventListener('input',()=>{
+            clearTimeout(timer); close();
+            const query=input.value.trim();
+            if(query.length<2){say('Type at least two letters to search.');return;}
+            say('Searching the world gazetteer…'); timer=setTimeout(()=>search(query),300);
+          });
+          button.addEventListener('click',event=>{
+            event.preventDefault(); const query=input.value.trim();
+            if(query.length<2){say('Enter at least two letters to search.',true);return;}
+            clearTimeout(timer); search(query);
+          });
+          document.querySelectorAll('.city-pill').forEach(pill=>pill.addEventListener('click',()=>{
+            input.value=pill.textContent.trim(); search(input.value);
+          }));
+          document.addEventListener('click',event=>{if(!event.target.closest('#city-search')&&!event.target.closest('#city-suggestions'))close();});
+          document.addEventListener('keydown',event=>{if(event.key==='Escape')close();});
+          async function load(city){
+            if(weatherController) weatherController.abort();
+            weatherController=new AbortController();
+            button.disabled=true; say('Receiving the latest weather dispatch…');
+            const url=new URL('https://api.open-meteo.com/v1/forecast');
+            url.search=new URLSearchParams({latitude:city.latitude,longitude:city.longitude,current:'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m',hourly:'temperature_2m,relative_humidity_2m,wind_speed_10m',forecast_days:'2',timezone:'auto'});
+            try{
+              const response=await fetch(url,{signal:weatherController.signal});
+              if(!response.ok)throw new Error('The weather service is unavailable. Please try again.');
+              const data=await response.json(), current=data.current, units=data.current_units||{};
+              document.getElementById('live-city').textContent=[city.name,city.admin1,city.country].filter(Boolean).filter((value,index,all)=>all.indexOf(value)===index).join(', ');
+              document.getElementById('live-time').textContent='Local station time · '+current.time.replace('T',' ');
+              document.getElementById('live-condition').textContent=labels[current.weather_code]||'Conditions reported';
+              document.getElementById('live-temperature').textContent=Math.round(current.temperature_2m)+(units.temperature_2m||'°C');
+              document.getElementById('live-feels').textContent=Math.round(current.apparent_temperature)+(units.apparent_temperature||'°C');
+              document.getElementById('live-humidity').textContent=current.relative_humidity_2m+(units.relative_humidity_2m||'%');
+              document.getElementById('live-wind').textContent=current.wind_speed_10m+' '+(units.wind_speed_10m||'km/h');
+              const hourly=document.getElementById('live-hourly'); hourly.replaceChildren();
+              let start=(data.hourly?.time||[]).findIndex(time=>time>=current.time); if(start<0)start=0;
+              for(let i=start;i<Math.min(start+12,data.hourly.time.length);i++){
+                const cell=document.createElement('div'); cell.className='shrink-0 bg-surface-container-lowest rounded p-space-sm text-center';
+                const time=document.createElement('div');time.className='font-label-sm text-label-sm';time.textContent=new Intl.DateTimeFormat(undefined,{hour:'numeric',timeZone:data.timezone}).format(new Date(data.hourly.time[i]));
+                const temp=document.createElement('strong');temp.className='block font-headline-sm text-headline-sm mt-1';temp.textContent=Math.round(data.hourly.temperature_2m[i])+(data.hourly_units?.temperature_2m||'°C');
+                const details=document.createElement('small');details.className='font-label-sm text-label-sm text-on-surface-variant';details.textContent=data.hourly.relative_humidity_2m[i]+'% RH · '+data.hourly.wind_speed_10m[i]+' '+(data.hourly_units?.wind_speed_10m||'km/h');
+                cell.append(time,temp,details);hourly.append(cell);
+              }
+              report.hidden=false; say('Dispatch received. Current conditions shown in local station time.');
+            }catch(error){if(error.name!=='AbortError')say(error.message||'Unable to load weather.',true);}
+            finally{button.disabled=false;}
+          }
+        })();`;
+        parsed.body.appendChild(api);
+        document.open();
+        document.write('<!DOCTYPE html>\n' + parsed.documentElement.outerHTML);
+        document.close();
+      } catch (error) {
+        document.body.innerHTML = '<main style="font:16px sans-serif;padding:2rem"><h1>Weather dispatch unavailable</h1><p>' + String(error.message).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character])) + '</p><p>Please refresh to try again.</p></main>';
+      }
+    })();
+  </script>
+</body>
+</html>
