@@ -6,139 +6,125 @@
   <title>Weather Dispatch</title>
 </head>
 <body>
-  <p style="font:16px sans-serif;padding:2rem">Loading the original weather dispatch…</p>
   <script>
-    (async function restoreOriginalDesign() {
+    (async function preserveOriginalPageAndAddCitySearch() {
       const originalUrl = 'https://raw.githubusercontent.com/MSherK/19s-weather/206180f7125202d53d8c37513ad631076ac1355d/index.html';
       try {
         const response = await fetch(originalUrl);
-        if (!response.ok) throw new Error('Could not load the original page.');
+        if (!response.ok) throw new Error('Could not load the original weather page.');
         const source = await response.text();
-        const parsed = new DOMParser().parseFromString(source, 'text/html');
-
-        // Replace only the original demo handlers; all original markup, styles and images remain intact.
-        parsed.querySelectorAll('script').forEach(script => {
+        const page = new DOMParser().parseFromString(source, 'text/html');
+        page.querySelectorAll('script').forEach(script => {
           if (script.textContent.includes('initVintageWeather')) script.remove();
         });
 
-        const input = parsed.getElementById('city-search');
-        const dispatch = parsed.getElementById('dispatch-btn');
+        const input = page.getElementById('city-search');
+        const dispatch = page.getElementById('dispatch-btn');
         if (!input || !dispatch) throw new Error('The original city search controls were not found.');
 
-        const searchWrap = input.parentElement;
-        const suggestions = parsed.createElement('div');
+        const suggestions = page.createElement('div');
         suggestions.id = 'city-suggestions';
         suggestions.setAttribute('role', 'listbox');
         suggestions.hidden = true;
-        suggestions.style.cssText = 'position:absolute;z-index:50;top:100%;left:0;right:0;max-height:16rem;overflow:auto;background:#fff;border:2px solid #000;border-radius:.5rem;box-shadow:3px 3px 0 #000;margin-top:4px';
-        searchWrap.appendChild(suggestions);
+        suggestions.style.cssText = 'position:absolute;z-index:50;top:calc(100% + 4px);left:0;right:0;max-height:260px;overflow:auto;background:#fff;border:2px solid #000;border-radius:4px;box-shadow:3px 3px 0 #000';
+        input.parentElement.appendChild(suggestions);
 
-        const status = parsed.createElement('p');
-        status.id = 'weather-dispatch-status';
-        status.setAttribute('role', 'status');
-        status.setAttribute('aria-live', 'polite');
-        status.className = 'font-label-sm text-label-sm text-on-surface-variant mt-1';
-        dispatch.closest('.flex.flex-col')?.appendChild(status);
+        const styles = page.createElement('style');
+        styles.textContent = '#city-suggestions[hidden]{display:none}#city-suggestions button{display:block;width:100%;padding:.65rem .8rem;text-align:left;background:#fff;color:#1d1c16;border:0;border-bottom:1px solid #e7e2d9;font:12px Courier Prime,monospace;cursor:pointer}#city-suggestions button:hover,#city-suggestions button:focus{background:#f2ede4}';
+        page.head.appendChild(styles);
 
-        // Use the originally empty hero area for the selected city's live report.
-        const main = parsed.querySelector('main');
-        const content = main?.querySelector('.max-w-7xl');
-        const forecast = content?.querySelector('.py-space-lg');
-        const report = parsed.createElement('section');
-        report.id = 'live-weather-report';
-        report.className = 'bg-surface-container-low border-2 border-primary rounded-xl p-space-lg shadow-[4px_4px_0_0_#000000]';
-        report.hidden = true;
-        report.innerHTML = '<div class="flex flex-wrap items-start justify-between gap-4"><div><span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Current station report</span><h2 id="live-city" class="font-headline-lg text-headline-lg uppercase font-bold mt-1"></h2><p id="live-time" class="font-label-sm text-label-sm text-on-surface-variant"></p></div><div class="text-right"><span id="live-condition" class="font-label-md text-label-md uppercase font-bold"></span><div id="live-temperature" class="font-headline-lg text-headline-lg font-extrabold mt-2"></div></div></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4"><div class="bg-surface-container-lowest rounded p-space-sm"><span class="font-label-sm text-label-sm uppercase">Feels like</span><strong id="live-feels" class="block font-headline-sm text-headline-sm mt-1"></strong></div><div class="bg-surface-container-lowest rounded p-space-sm"><span class="font-label-sm text-label-sm uppercase">Humidity</span><strong id="live-humidity" class="block font-headline-sm text-headline-sm mt-1"></strong></div><div class="bg-surface-container-lowest rounded p-space-sm"><span class="font-label-sm text-label-sm uppercase">Wind speed</span><strong id="live-wind" class="block font-headline-sm text-headline-sm mt-1"></strong></div></div><h3 class="font-headline-md text-headline-md uppercase font-bold mt-space-lg">Hourly conditions</h3><div id="live-hourly" class="flex gap-3 overflow-x-auto py-space-sm"></div>';
-        if (forecast) content.insertBefore(report, forecast);
-
-        const api = parsed.createElement('script');
-        api.textContent = `(() => {
+        const searchScript = page.createElement('script');
+        searchScript.textContent = `(() => {
           const input = document.getElementById('city-search');
-          const button = document.getElementById('dispatch-btn');
-          const list = document.getElementById('city-suggestions');
-          const status = document.getElementById('weather-dispatch-status');
-          const report = document.getElementById('live-weather-report');
-          let timer, controller, weatherController;
-          const say = (text, error = false) => { status.textContent = text; status.classList.toggle('text-error', error); };
-          const close = () => { list.hidden = true; list.replaceChildren(); };
-          const labels = {0:'Radiant sunshine',1:'Mainly clear',2:'Partly overcast',3:'Overcast',45:'Foggy',48:'Rime fog',51:'Light drizzle',53:'Misty drizzle',55:'Heavy drizzle',56:'Freezing drizzle',57:'Freezing drizzle',61:'Light rain',63:'Steady rain',65:'Heavy rain',66:'Freezing rain',67:'Freezing rain',71:'Light snow',73:'Snowfall',75:'Heavy snow',77:'Snow grains',80:'Passing showers',81:'Rain showers',82:'Heavy showers',85:'Snow showers',86:'Snow showers',95:'Thunderstorm',96:'Thunderstorm',99:'Severe thunderstorm'};
-          async function search(query) {
+          const dispatch = document.getElementById('dispatch-btn');
+          const suggestions = document.getElementById('city-suggestions');
+          let timer;
+          let controller;
+          function closeSuggestions() {
+            suggestions.hidden = true;
+            suggestions.replaceChildren();
+          }
+          async function searchCities(query) {
             if (controller) controller.abort();
             controller = new AbortController();
             try {
               const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
-              url.search = new URLSearchParams({name:query,count:'7',language:'en',format:'json'});
-              const response = await fetch(url, {signal:controller.signal});
-              if (!response.ok) throw new Error('City search is unavailable. Please try again.');
+              url.search = new URLSearchParams({ name: query, count: '7', language: 'en', format: 'json' });
+              const response = await fetch(url, { signal: controller.signal });
+              if (!response.ok) throw new Error('City search is temporarily unavailable.');
               const data = await response.json();
-              list.replaceChildren();
-              if (!data.results?.length) { close(); say('No matching cities found. Try another spelling.'); return; }
+              suggestions.replaceChildren();
+              if (!data.results || !data.results.length) {
+                closeSuggestions();
+                return;
+              }
               data.results.forEach(city => {
                 const option = document.createElement('button');
-                option.type = 'button'; option.setAttribute('role','option');
-                option.textContent = [city.name,city.admin1,city.country].filter(Boolean).filter((value,index,all)=>all.indexOf(value)===index).join(', ');
-                option.style.cssText = 'display:block;width:100%;text-align:left;padding:.7rem 1rem;background:#fff;color:#1d1c16;border:0;border-bottom:1px solid #e7e2d9;font:14px Courier Prime,monospace;cursor:pointer';
-                option.addEventListener('mouseenter',()=>option.style.background='#f2ede4');
-                option.addEventListener('mouseleave',()=>option.style.background='#fff');
-                option.addEventListener('click',()=>{input.value=option.textContent;close();load(city);});
-                list.appendChild(option);
+                option.type = 'button';
+                option.setAttribute('role', 'option');
+                option.textContent = [city.name, city.admin1, city.country]
+                  .filter(Boolean)
+                  .filter((part, index, parts) => parts.indexOf(part) === index)
+                  .join(', ');
+                option.addEventListener('click', () => {
+                  input.value = option.textContent;
+                  input.dataset.latitude = city.latitude;
+                  input.dataset.longitude = city.longitude;
+                  input.dataset.timezone = city.timezone || '';
+                  closeSuggestions();
+                });
+                suggestions.appendChild(option);
               });
-              list.hidden = false; say('Choose a city from the dispatch list.');
-            } catch(error) { if(error.name!=='AbortError') say(error.message || 'City search failed.',true); }
+              suggestions.hidden = false;
+            } catch (error) {
+              if (error.name !== 'AbortError') closeSuggestions();
+            }
           }
-          input.addEventListener('input',()=>{
-            clearTimeout(timer); close();
-            const query=input.value.trim();
-            if(query.length<2){say('Type at least two letters to search.');return;}
-            say('Searching the world gazetteer…'); timer=setTimeout(()=>search(query),300);
+          input.addEventListener('input', () => {
+            clearTimeout(timer);
+            input.dataset.latitude = '';
+            input.dataset.longitude = '';
+            const query = input.value.trim();
+            closeSuggestions();
+            if (query.length >= 2) timer = setTimeout(() => searchCities(query), 300);
           });
-          button.addEventListener('click',event=>{
-            event.preventDefault(); const query=input.value.trim();
-            if(query.length<2){say('Enter at least two letters to search.',true);return;}
-            clearTimeout(timer); search(query);
+          input.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeSuggestions();
+            if (event.key === 'Enter' && !suggestions.hidden) {
+              event.preventDefault();
+              const first = suggestions.querySelector('button');
+              if (first) first.click();
+            }
           });
-          document.querySelectorAll('.city-pill').forEach(pill=>pill.addEventListener('click',()=>{
-            input.value=pill.textContent.trim(); search(input.value);
-          }));
-          document.addEventListener('click',event=>{if(!event.target.closest('#city-search')&&!event.target.closest('#city-suggestions'))close();});
-          document.addEventListener('keydown',event=>{if(event.key==='Escape')close();});
-          async function load(city){
-            if(weatherController) weatherController.abort();
-            weatherController=new AbortController();
-            button.disabled=true; say('Receiving the latest weather dispatch…');
-            const url=new URL('https://api.open-meteo.com/v1/forecast');
-            url.search=new URLSearchParams({latitude:city.latitude,longitude:city.longitude,current:'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m',hourly:'temperature_2m,relative_humidity_2m,wind_speed_10m',forecast_days:'2',timezone:'auto'});
-            try{
-              const response=await fetch(url,{signal:weatherController.signal});
-              if(!response.ok)throw new Error('The weather service is unavailable. Please try again.');
-              const data=await response.json(), current=data.current, units=data.current_units||{};
-              document.getElementById('live-city').textContent=[city.name,city.admin1,city.country].filter(Boolean).filter((value,index,all)=>all.indexOf(value)===index).join(', ');
-              document.getElementById('live-time').textContent='Local station time · '+current.time.replace('T',' ');
-              document.getElementById('live-condition').textContent=labels[current.weather_code]||'Conditions reported';
-              document.getElementById('live-temperature').textContent=Math.round(current.temperature_2m)+(units.temperature_2m||'°C');
-              document.getElementById('live-feels').textContent=Math.round(current.apparent_temperature)+(units.apparent_temperature||'°C');
-              document.getElementById('live-humidity').textContent=current.relative_humidity_2m+(units.relative_humidity_2m||'%');
-              document.getElementById('live-wind').textContent=current.wind_speed_10m+' '+(units.wind_speed_10m||'km/h');
-              const hourly=document.getElementById('live-hourly'); hourly.replaceChildren();
-              let start=(data.hourly?.time||[]).findIndex(time=>time>=current.time); if(start<0)start=0;
-              for(let i=start;i<Math.min(start+12,data.hourly.time.length);i++){
-                const cell=document.createElement('div'); cell.className='shrink-0 bg-surface-container-lowest rounded p-space-sm text-center';
-                const time=document.createElement('div');time.className='font-label-sm text-label-sm';time.textContent=new Intl.DateTimeFormat(undefined,{hour:'numeric',timeZone:data.timezone}).format(new Date(data.hourly.time[i]));
-                const temp=document.createElement('strong');temp.className='block font-headline-sm text-headline-sm mt-1';temp.textContent=Math.round(data.hourly.temperature_2m[i])+(data.hourly_units?.temperature_2m||'°C');
-                const details=document.createElement('small');details.className='font-label-sm text-label-sm text-on-surface-variant';details.textContent=data.hourly.relative_humidity_2m[i]+'% RH · '+data.hourly.wind_speed_10m[i]+' '+(data.hourly_units?.wind_speed_10m||'km/h');
-                cell.append(time,temp,details);hourly.append(cell);
-              }
-              report.hidden=false; say('Dispatch received. Current conditions shown in local station time.');
-            }catch(error){if(error.name!=='AbortError')say(error.message||'Unable to load weather.',true);}
-            finally{button.disabled=false;}
-          }
+          dispatch.addEventListener('click', event => {
+            event.preventDefault();
+            const query = input.value.trim();
+            if (query.length >= 2) searchCities(query);
+          });
+          document.querySelectorAll('.city-pill').forEach(button => {
+            button.addEventListener('click', () => {
+              document.querySelectorAll('.city-pill').forEach(pill => {
+                pill.classList.remove('bg-primary', 'text-on-primary');
+                pill.classList.add('bg-surface-container-high', 'text-on-surface');
+              });
+              button.classList.remove('bg-surface-container-high', 'text-on-surface');
+              button.classList.add('bg-primary', 'text-on-primary');
+              input.value = button.textContent.trim();
+              input.dataset.latitude = '';
+              input.dataset.longitude = '';
+              searchCities(input.value);
+            });
+          });
+          document.addEventListener('click', event => {
+            if (!event.target.closest('#city-search') && !event.target.closest('#city-suggestions')) closeSuggestions();
+          });
         })();`;
-        parsed.body.appendChild(api);
+        page.body.appendChild(searchScript);
         document.open();
-        document.write('<!DOCTYPE html>\n' + parsed.documentElement.outerHTML);
+        document.write('<!DOCTYPE html>\n' + page.documentElement.outerHTML);
         document.close();
       } catch (error) {
-        document.body.innerHTML = '<main style="font:16px sans-serif;padding:2rem"><h1>Weather dispatch unavailable</h1><p>' + String(error.message).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character])) + '</p><p>Please refresh to try again.</p></main>';
+        document.body.textContent = 'Unable to load the original weather page. Please refresh to try again.';
       }
     })();
   </script>
